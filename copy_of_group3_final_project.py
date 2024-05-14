@@ -3,7 +3,6 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image, ImageOps
 from tensorflow.keras.preprocessing.image import img_to_array
-from keras.models import load_model
 
 @st.cache(allow_output_mutation=True)
 def load_fashion_model():
@@ -18,7 +17,6 @@ def import_and_predict(image_data, model):
     # Convert the NumPy array to an Image instance
     image = Image.fromarray(image_data)
     # Use ImageOps.fit with the Image instance
-    
     image = ImageOps.fit(image, size)
     img = np.asarray(image)
     
@@ -28,16 +26,15 @@ def import_and_predict(image_data, model):
     prediction = model.predict(img_reshape)
     return prediction
 
-def load_image():
+def load_image(image):
 
-    
     # Check if the image is grayscale, if so, add a channel dimension
-    if len(img.shape) == 2:
-        img = np.expand_dims(img, axis=-1)
+    if len(image.shape) == 2:
+        image = np.expand_dims(image, axis=-1)
     
-    img = img / 255.0
-    img = np.reshape(img, (1, 64, 64, img.shape[-1]))
-    return img
+    image = image / 255.0
+    image = np.reshape(image, (1, 28, 28, image.shape[-1]))
+    return image
 
 model = load_fashion_model()
 
@@ -52,9 +49,6 @@ else:
 
     # Convert the image to a NumPy array
     image_array = img_to_array(image)
-
-    # Normalize the image
-    image_array = image_array / 255.0
 
     # Load the image into the model for prediction
     prediction = import_and_predict(image_array, model)
